@@ -13,8 +13,8 @@ class PortfolioApp {
         this.setupSmoothScrolling();
         this.setupCardTiltEffect();
         this.setupStaggeredPopIn();
-        this.setupParallaxMousemove();
         this.setupNavIndicator();
+        this.setupButtonRipple();
     }
 
     // Typing Animation for Hero Section
@@ -70,6 +70,8 @@ class PortfolioApp {
         const updateActiveNav = () => {
             let currentSection = '';
             const scrollY = window.pageYOffset;
+            const windowHeight = window.innerHeight;
+            const docHeight = document.documentElement.scrollHeight;
 
             sections.forEach(section => {
                 const sectionTop = section.offsetTop - 100;
@@ -81,6 +83,11 @@ class PortfolioApp {
                 }
             });
 
+            // If near the bottom of the page, highlight the last section (Contact)
+            if (window.innerHeight + window.scrollY >= docHeight - 2) {
+                currentSection = sections[sections.length - 1].getAttribute('id');
+            }
+
             navLinks.forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href') === `#${currentSection}`) {
@@ -89,9 +96,17 @@ class PortfolioApp {
             });
         };
 
-        // Update on scroll
-        window.addEventListener('scroll', updateActiveNav);
-        
+        // Throttle scroll event
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateActiveNav();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
         // Update on load
         updateActiveNav();
     }
@@ -184,8 +199,7 @@ class PortfolioApp {
                 const targetSection = document.querySelector(targetId);
                 
                 if (targetSection) {
-                    const headerHeight = 70; // Fixed nav height
-                    const targetPosition = targetSection.offsetTop - headerHeight;
+                    const targetPosition = targetSection.offsetTop;
                     
                     window.scrollTo({
                         top: targetPosition,
@@ -205,8 +219,7 @@ class PortfolioApp {
                 const targetSection = document.querySelector(targetId);
                 
                 if (targetSection) {
-                    const headerHeight = 70;
-                    const targetPosition = targetSection.offsetTop - headerHeight;
+                    const targetPosition = targetSection.offsetTop;
                     
                     window.scrollTo({
                         top: targetPosition,
@@ -361,26 +374,6 @@ class PortfolioApp {
         });
     }
 
-    // Parallax for background shapes and hero blobs
-    setupParallaxMousemove() {
-        const shapes = document.querySelectorAll('.background-shapes .shape');
-        const blobs = document.querySelectorAll('.hero-svg-blobs .blob');
-        const isDesktop = window.innerWidth > 700;
-        if (!isDesktop) return;
-        window.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 2;
-            const y = (e.clientY / window.innerHeight - 0.5) * 2;
-            shapes.forEach((shape, i) => {
-                const factor = (i + 1) * 8;
-                shape.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
-            });
-            blobs.forEach((blob, i) => {
-                const factor = (i + 1) * 12;
-                blob.style.transform = `scale(1.1) translate(${x * factor}px, ${y * factor}px)`;
-            });
-        });
-    }
-
     // Floating nav indicator for nav-vertical
     setupNavIndicator() {
         const navLinks = document.querySelectorAll('.nav-link');
@@ -417,6 +410,24 @@ class PortfolioApp {
         };
         updateIndicators();
         window.addEventListener('scroll', updateIndicators);
+    }
+
+    // Add ripple effect to hero buttons
+    setupButtonRipple() {
+        const heroButtons = document.querySelectorAll('.hero-buttons .btn');
+        heroButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const rect = btn.getBoundingClientRect();
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                btn.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 500);
+            });
+        });
     }
 }
 
