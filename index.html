@@ -64,7 +64,11 @@
             <div class="hero-merged">
                 <div class="hero-merged-left">
                     <div class="profile-avatar">
-                        <img src="images/profile.jpg" alt="Prafful Agrawal profile photo" class="profile-image" />
+                        <picture>
+                            <source srcset="images/profile.avif" type="image/avif">
+                            <source srcset="images/profile.webp" type="image/webp">
+                            <img src="images/profile.jpg" alt="Prafful Agrawal profile photo" class="profile-image" width="240" height="240" loading="lazy">
+                        </picture>
                     </div>
                 </div>
                 <div class="hero-merged-right glassmorphic">
@@ -408,9 +412,9 @@
                     </div>
                     <div class="confetti-container"></div>
                     <div class="contact-links">
-                        <a href="mailto:contact@prafful.dev" class="contact-link">
+                        <a href="mailto:prafful.jp.work@gmail.com" class="contact-link">
                             <span class="contact-icon">📧</span>
-                            <span>prafful026@gmail.com</span>
+                            <span>prafful.jp.work@gmail.com</span>
                         </a>
                         <a href="https://www.linkedin.com/in/prafful026/" target="_blank" class="contact-link">
                             <span class="contact-icon">💼</span>
@@ -426,6 +430,6 @@
         </div>
     </section>
 
-    <script src="app.js"></script>
+    <script src="app.js" defer></script>
 </body>
 </html>
