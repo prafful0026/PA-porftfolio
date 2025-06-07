@@ -15,7 +15,6 @@ class PortfolioApp {
         this.setupStaggeredPopIn();
         this.setupParallaxMousemove();
         this.setupNavIndicator();
-        this.setupThemeToggle();
     }
 
     // Typing Animation for Hero Section
@@ -418,30 +417,6 @@ class PortfolioApp {
         };
         updateIndicators();
         window.addEventListener('scroll', updateIndicators);
-    }
-
-    // Dark/Light mode toggle
-    setupThemeToggle() {
-        const btn = document.getElementById('themeToggle');
-        if (!btn) return;
-        btn.addEventListener('click', () => {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-color-scheme');
-            if (current === 'dark') {
-                html.setAttribute('data-color-scheme', 'light');
-                localStorage.setItem('color-scheme', 'light');
-            } else {
-                html.setAttribute('data-color-scheme', 'dark');
-                localStorage.setItem('color-scheme', 'dark');
-            }
-        });
-        // On load, set theme from localStorage or system
-        const saved = localStorage.getItem('color-scheme');
-        if (saved) {
-            document.documentElement.setAttribute('data-color-scheme', saved);
-        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.setAttribute('data-color-scheme', 'dark');
-        }
     }
 }
 
