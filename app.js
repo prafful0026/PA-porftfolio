@@ -11,6 +11,11 @@ class PortfolioApp {
         this.setupScrollAnimations();
         this.setupSkillBarAnimations();
         this.setupSmoothScrolling();
+        this.setupCardTiltEffect();
+        this.setupStaggeredPopIn();
+        this.setupParallaxMousemove();
+        this.setupNavIndicator();
+        this.setupThemeToggle();
     }
 
     // Typing Animation for Hero Section
@@ -319,6 +324,124 @@ class PortfolioApp {
         this.setupContactInteractions();
         this.setupTechTagEffects();
         this.setupOptimizedScrolling();
+    }
+
+    // 3D Tilt Effect for Cards
+    setupCardTiltEffect() {
+        const cards = document.querySelectorAll('.glassmorphic');
+        const isDesktop = window.innerWidth > 700;
+        if (!isDesktop) return;
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * 8;
+                const rotateY = ((x - centerX) / centerX) * 8;
+                card.style.setProperty('--tilt-x', `${rotateY}deg`);
+                card.style.setProperty('--tilt-y', `${-rotateX}deg`);
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.setProperty('--tilt-x', '0deg');
+                card.style.setProperty('--tilt-y', '0deg');
+            });
+        });
+    }
+
+    // Staggered Pop-in for Skill Chips and Tech Tags
+    setupStaggeredPopIn() {
+        const chips = document.querySelectorAll('.chip');
+        chips.forEach((chip, i) => {
+            chip.style.setProperty('--chip-index', i);
+        });
+        const tags = document.querySelectorAll('.tech-tag');
+        tags.forEach((tag, i) => {
+            tag.style.setProperty('--chip-index', i);
+        });
+    }
+
+    // Parallax for background shapes and hero blobs
+    setupParallaxMousemove() {
+        const shapes = document.querySelectorAll('.background-shapes .shape');
+        const blobs = document.querySelectorAll('.hero-svg-blobs .blob');
+        const isDesktop = window.innerWidth > 700;
+        if (!isDesktop) return;
+        window.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 2;
+            const y = (e.clientY / window.innerHeight - 0.5) * 2;
+            shapes.forEach((shape, i) => {
+                const factor = (i + 1) * 8;
+                shape.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+            });
+            blobs.forEach((blob, i) => {
+                const factor = (i + 1) * 12;
+                blob.style.transform = `scale(1.1) translate(${x * factor}px, ${y * factor}px)`;
+            });
+        });
+    }
+
+    // Floating nav indicator for nav-vertical
+    setupNavIndicator() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                const indicator = link.nextElementSibling;
+                if (indicator && indicator.classList.contains('nav-indicator')) {
+                    indicator.style.transform = 'translateY(-50%) scale(1.2)';
+                    indicator.style.opacity = '1';
+                }
+            });
+            link.addEventListener('mouseleave', () => {
+                const indicator = link.nextElementSibling;
+                if (indicator && indicator.classList.contains('nav-indicator') && !link.classList.contains('active')) {
+                    indicator.style.transform = 'translateY(-50%) scale(0)';
+                    indicator.style.opacity = '0';
+                }
+            });
+        });
+        // Ensure only the active nav-link's indicator is visible
+        const updateIndicators = () => {
+            navLinks.forEach(link => {
+                const indicator = link.nextElementSibling;
+                if (indicator && indicator.classList.contains('nav-indicator')) {
+                    if (link.classList.contains('active')) {
+                        indicator.style.transform = 'translateY(-50%) scale(1.2)';
+                        indicator.style.opacity = '1';
+                    } else {
+                        indicator.style.transform = 'translateY(-50%) scale(0)';
+                        indicator.style.opacity = '0';
+                    }
+                }
+            });
+        };
+        updateIndicators();
+        window.addEventListener('scroll', updateIndicators);
+    }
+
+    // Dark/Light mode toggle
+    setupThemeToggle() {
+        const btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-color-scheme');
+            if (current === 'dark') {
+                html.setAttribute('data-color-scheme', 'light');
+                localStorage.setItem('color-scheme', 'light');
+            } else {
+                html.setAttribute('data-color-scheme', 'dark');
+                localStorage.setItem('color-scheme', 'dark');
+            }
+        });
+        // On load, set theme from localStorage or system
+        const saved = localStorage.getItem('color-scheme');
+        if (saved) {
+            document.documentElement.setAttribute('data-color-scheme', saved);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-color-scheme', 'dark');
+        }
     }
 }
 
