@@ -1,0 +1,51 @@
+name: Minify and Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install minifiers
+        run: |
+          npm install -g html-minifier-terser clean-css-cli uglify-js
+
+      - name: Copy site files
+        run: |
+          mkdir dist
+          cp index.html dist/
+          cp style.css dist/
+          cp app.js dist/
+          cp -r images dist/
+          cp -r sitemap.xml robots.txt dist/ || true
+
+      - name: Minify HTML
+        run: |
+          html-minifier-terser dist/index.html -o dist/index.html --collapse-whitespace --remove-comments --remove-optional-tags --minify-css true --minify-js true
+
+      - name: Minify CSS
+        run: |
+          cleancss -o dist/style.css dist/style.css
+
+      - name: Minify JS
+        run: |
+          uglifyjs dist/app.js -o dist/app.js --compress --mangle
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          force_orphan: true 
