@@ -6,6 +6,10 @@
     <title>Prafful Agrawal - Software Engineer</title>
     <meta name="description" content="Software Engineer at Mercari with 2+ years of experience in Android development, backend systems, and web frontend.">
     
+    <!-- Preload critical assets -->
+    <link rel="preload" as="image" href="images/profile.webp" type="image/webp">
+    <link rel="preload" as="image" href="images/logo.png" type="image/png">
+    
     <!-- SEO Meta Tags -->
     <meta name="author" content="Prafful Agrawal">
     <meta name="keywords" content="Prafful Agrawal, Software Engineer, Android Developer, Backend Developer, Frontend Developer, Tokyo, Mercari, Portfolio">
@@ -93,7 +97,16 @@
                     <div class="hero__image-container">
                         <picture>
                             <source srcset="images/profile.webp" type="image/webp">
-                            <img src="./images/profile.webp" alt="Prafful Agrawal profile photo" class="hero__image-img">
+                            <img 
+                                src="./images/profile.webp" 
+                                alt="Prafful Agrawal profile photo" 
+                                class="hero__image-img"
+                                width="400"
+                                height="400"
+                                loading="eager"
+                                fetchpriority="high"
+                                decoding="async"
+                            >
                         </picture>
                     </div>
                 </div>
