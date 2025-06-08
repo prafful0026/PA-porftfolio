@@ -70,39 +70,6 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Contact Form Handling
-const contactForm = document.getElementById('contactForm');
-
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(contactForm);
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const subject = document.getElementById('subject').value;
-    const message = document.getElementById('message').value;
-    
-    // Basic form validation
-    if (!name.trim() || !email.trim() || !subject.trim() || !message.trim()) {
-        showNotification('Please fill in all fields.', 'error');
-        return;
-    }
-    
-    if (!isValidEmail(email)) {
-        showNotification('Please enter a valid email address.', 'error');
-        return;
-    }
-    
-    // Simulate form submission
-    showNotification('Thank you! Your message has been sent successfully.', 'success');
-    contactForm.reset();
-});
-
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
 // Notification System
 function showNotification(message, type = 'info') {
     // Remove existing notifications
