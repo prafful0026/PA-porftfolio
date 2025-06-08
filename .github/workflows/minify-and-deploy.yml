@@ -42,6 +42,9 @@ jobs:
         run: |
           uglifyjs dist/app.js -o dist/app.js --compress --mangle
 
+      - name: Create CNAME file
+        run: echo 'praffulagrawal.com' > dist/CNAME
+
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
