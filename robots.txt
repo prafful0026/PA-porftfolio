@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Sitemap: https://praffulagrawal.com/sitemap.xml
+
+# Disallow crawling of any potential admin or private areas
+Disallow: /admin/
+Disallow: /private/
+Disallow: /temp/ 
