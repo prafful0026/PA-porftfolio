@@ -344,3 +344,40 @@ heroCtaLinks.forEach(link => {
         }
     });
 });
+
+// Google Analytics Event Tracking
+// Track button clicks
+const trackedButtons = document.querySelectorAll('.btn, .nav__link');
+trackedButtons.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        if (typeof gtag === 'function') {
+            gtag('event', 'button_click', {
+                event_category: 'Button',
+                event_label: btn.textContent || btn.getAttribute('href') || btn.className
+            });
+        }
+    });
+});
+
+// Track form submissions
+const contactForm = document.querySelector('.contact__form form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+        if (typeof gtag === 'function') {
+            gtag('event', 'form_submit', {
+                event_category: 'Form',
+                event_label: 'Contact Form'
+            });
+        }
+    });
+}
+
+// Track JavaScript errors
+window.addEventListener('error', function(event) {
+    if (typeof gtag === 'function') {
+        gtag('event', 'js_error', {
+            event_category: 'Error',
+            event_label: event.message + ' at ' + event.filename + ':' + event.lineno
+        });
+    }
+});
