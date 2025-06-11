@@ -1,30 +1,83 @@
 // Theme Toggle Functionality
 const themeToggle = document.getElementById('themeToggle');
-const themeIcon = themeToggle.querySelector('.theme-toggle__icon');
-const html = document.documentElement;
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-// Check for saved theme preference or default to 'dark'
-const currentTheme = localStorage.getItem('theme') || 'dark';
-html.setAttribute('data-color-scheme', currentTheme);
-updateThemeIcon(currentTheme);
+// Check for saved theme preference or use system preference
+const currentTheme = localStorage.getItem('theme') || 
+    (prefersDarkScheme.matches ? 'dark' : 'light');
 
+// Apply theme
+document.documentElement.setAttribute('data-color-scheme', currentTheme);
+themeToggle.innerHTML = currentTheme === 'dark' ? '☀️' : '🌙';
+
+// Toggle theme
 themeToggle.addEventListener('click', () => {
-    const currentTheme = html.getAttribute('data-color-scheme');
+    const currentTheme = document.documentElement.getAttribute('data-color-scheme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     
-    html.setAttribute('data-color-scheme', newTheme);
+    document.documentElement.setAttribute('data-color-scheme', newTheme);
     localStorage.setItem('theme', newTheme);
-    updateThemeIcon(newTheme);
+    themeToggle.innerHTML = newTheme === 'dark' ? '☀️' : '🌙';
+    
+    // Update navbar background
+    updateNavbarTheme();
 });
 
-function updateThemeIcon(theme) {
-    themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+// Update navbar background based on theme
+function updateNavbarTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-color-scheme');
+    const navbar = document.querySelector('.nav');
+    
+    if (currentTheme === 'dark') {
+        navbar.style.background = 'rgba(31, 33, 33, 0.95)';
+    } else {
+        navbar.style.background = 'rgba(252, 252, 249, 0.95)';
+    }
 }
 
-// Smooth Scrolling Navigation
-const navLinks = document.querySelectorAll('.nav__link[href^="#"]');
+// Initialize navbar theme
+updateNavbarTheme();
 
-navLinks.forEach(link => {
+// Navigation functionality
+const nav = document.querySelector('.nav');
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.querySelector('.nav__links');
+
+// Handle scroll effect
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        nav.classList.add('nav--scrolled');
+    } else {
+        nav.classList.remove('nav--scrolled');
+    }
+});
+
+// Handle mobile menu toggle
+menuToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('nav__links--open');
+    menuToggle.setAttribute('aria-expanded', 
+        menuToggle.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
+    );
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!nav.contains(e.target) && navLinks.classList.contains('nav__links--open')) {
+        navLinks.classList.remove('nav__links--open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+    }
+});
+
+// Close mobile menu when clicking a link
+document.querySelectorAll('.nav__link').forEach(link => {
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('nav__links--open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+    });
+});
+
+// Smooth Scrolling Navigation
+document.querySelectorAll('.nav__link[href^="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
         const targetId = link.getAttribute('href');
@@ -39,17 +92,12 @@ navLinks.forEach(link => {
                 behavior: 'smooth'
             });
         }
-        // Close mobile menu after click
-        const nav = document.querySelector('.nav');
-        if (nav.classList.contains('nav--open')) {
-            nav.classList.remove('nav--open');
-        }
     });
 });
 
 // Active Navigation Link Highlighting
 const sections = document.querySelectorAll('section[id]');
-const navLinksArray = Array.from(navLinks);
+const navLinksArray = Array.from(document.querySelectorAll('.nav__link'));
 
 window.addEventListener('scroll', () => {
     const scrollPosition = window.scrollY + 100;
@@ -136,7 +184,7 @@ function showNotification(message, type = 'info') {
 const navbar = document.querySelector('.nav');
 
 window.addEventListener('scroll', () => {
-    const currentTheme = html.getAttribute('data-color-scheme');
+    const currentTheme = document.documentElement.getAttribute('data-color-scheme');
     if (window.scrollY > 50) {
         navbar.style.background = currentTheme === 'dark'
             ? 'rgba(31, 33, 33, 0.98)'
@@ -281,35 +329,6 @@ window.addEventListener('load', () => {
         document.body.style.opacity = '1';
     }, 100);
 });
-
-// Update navbar background based on theme
-function updateNavbarTheme() {
-    const currentTheme = html.getAttribute('data-color-scheme');
-    const navbar = document.querySelector('.nav');
-    
-    if (currentTheme === 'dark') {
-        navbar.style.background = 'rgba(31, 33, 33, 0.95)';
-    } else {
-        navbar.style.background = 'rgba(252, 252, 249, 0.95)';
-    }
-}
-
-// Call updateNavbarTheme when theme changes
-const themeObserver = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'data-color-scheme') {
-            updateNavbarTheme();
-        }
-    });
-});
-
-themeObserver.observe(html, {
-    attributes: true,
-    attributeFilter: ['data-color-scheme']
-});
-
-// Initialize navbar theme
-updateNavbarTheme();
 
 document.addEventListener('DOMContentLoaded', function() {
   const menuToggle = document.getElementById('menuToggle');
