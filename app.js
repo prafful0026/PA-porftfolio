@@ -68,8 +68,8 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Close mobile menu when clicking a link
-document.querySelectorAll('.nav__link').forEach(link => {
+// Close mobile menu when clicking on a nav link
+navLinks.querySelectorAll('.nav__link').forEach(link => {
     link.addEventListener('click', () => {
         navLinks.classList.remove('nav__links--open');
         menuToggle.setAttribute('aria-expanded', 'false');
@@ -85,7 +85,7 @@ document.querySelectorAll('.nav__link[href^="#"]').forEach(link => {
         
         if (targetSection) {
             const navHeight = document.querySelector('.nav').offsetHeight;
-            const targetPosition = targetSection.offsetTop - navHeight - 20;
+            const targetPosition = targetSection.offsetTop - navHeight;
             
             window.scrollTo({
                 top: targetPosition,
@@ -350,7 +350,7 @@ heroCtaLinks.forEach(link => {
         const targetSection = document.querySelector(targetId);
         if (targetSection) {
             const navHeight = document.querySelector('.nav').offsetHeight;
-            const targetPosition = targetSection.offsetTop - navHeight - 20;
+            const targetPosition = targetSection.offsetTop - navHeight;
             window.scrollTo({
                 top: targetPosition,
                 behavior: 'smooth'
