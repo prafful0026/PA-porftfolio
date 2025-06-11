@@ -754,12 +754,14 @@ select.form-control {
     transition: transform 0.3s ease, opacity 0.3s ease;
     transform: translateY(-10px);
     opacity: 0;
+    pointer-events: none;
   }
 
   .nav__links.nav__links--open {
     display: flex;
     transform: translateY(0);
     opacity: 1;
+    pointer-events: auto;
   }
 
   .nav__link {
