@@ -739,8 +739,8 @@ select.form-control {
 @media (max-width: 768px) {
   .nav__links {
     display: none;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 72px; /* Height of the nav bar */
     left: 0;
     right: 0;
     background: var(--color-surface);
@@ -750,10 +750,16 @@ select.form-control {
     gap: var(--space-16);
     border-bottom: 1px solid var(--color-border);
     box-shadow: var(--shadow-md);
+    z-index: 1000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(-10px);
+    opacity: 0;
   }
 
   .nav__links.nav__links--open {
     display: flex;
+    transform: translateY(0);
+    opacity: 1;
   }
 
   .nav__link {
@@ -1131,6 +1137,10 @@ html {
   transition: all var(--duration-normal) var(--ease-standard);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-12);
 }
 
 .interest-card:hover {
@@ -1139,38 +1149,22 @@ html {
   border-color: var(--color-primary);
 }
 
-.interest-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-hover));
-  transform: scaleX(0);
-  transition: transform var(--duration-normal) var(--ease-standard);
-}
-
-.interest-card:hover::before {
-  transform: scaleX(1);
-}
-
 .interest-icon {
-  font-size: 3rem;
-  margin-bottom: var(--space-16);
+  font-size: 2.5rem;
+  margin-bottom: var(--space-8);
   display: block;
 }
 
 .interest-card h3 {
-  margin-bottom: var(--space-12);
+  margin: 0;
   color: var(--color-text);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
 }
 
 .interest-card p {
+  margin: 0;
   color: var(--color-text-secondary);
-  line-height: var(--line-height-normal);
-  margin-bottom: 0;
+  font-size: var(--font-size-sm);
 }
 
 /* Cultural Journey Section */
